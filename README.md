@@ -25,3 +25,76 @@ Built an automated ETL pipeline to extract live weather data from APIs, transfor
 | 2025-11-22 | 28.7041  | 77.1025   | 19.2             | 8.7              | 355                | 0            |
 | 2025-11-23 | 28.7041  | 77.1025   | 19.0             | 8.3              | 5                  | 1            |
 | 2025-11-24 | 28.7041  | 77.1025   | 18.7             | 7.9              | 10                 | 0            |
+
+
+
+Data Cleaning
+1) Remove Missing Values
+
+Identify missing entries in critical fields:
+
+SELECT *
+FROM weather_data
+WHERE temperature IS NULL
+   OR windspeed IS NULL
+   OR winddirection IS NULL
+   OR weathercode IS NULL;
+
+
+If missing values are detected, either fill or remove them depending on the case.
+For this dataset, rows with missing temperature values were remove:
+
+DELETE FROM weather_data
+WHERE temperature IS NULL;
+
+2) Ensure Correct Data Types
+
+To maintain schema consistency and avoid analytical errors, data types were standardized:
+
+ALTER TABLE weather_data
+MODIFY latitude FLOAT,
+MODIFY longitude FLOAT,
+MODIFY temperature FLOAT,
+MODIFY windspeed FLOAT,
+MODIFY winddirection FLOAT,
+MODIFY weathercode INT;
+
+3) Remove Duplicate Records
+
+Weather APIs can return repeated timestamps for the same coordinates.
+Duplicates are removed by keeping the earliest entry:
+
+DELETE t1
+FROM weather_data t1
+INNER JOIN weather_data t2
+  ON t1.latitude = t2.latitude
+ AND t1.longitude = t2.longitude
+ AND t1.timestamp > t2.timestamp;
+
+📊 SQL Queries for Analysis
+1) Average Temperature by City
+SELECT city, AVG(temperature) AS avg_temperature
+FROM weather_data
+GROUP BY city;
+
+2) Maximum and Minimum Temperature
+SELECT 
+    MAX(temperature) AS max_temperature,
+    MIN(temperature) AS min_temperature
+FROM weather_data;
+
+3) Fetch Weather Data for a Specific Date
+SELECT *
+FROM weather_data
+WHERE date = '2025-11-15';
+
+4) Compare Average Windspeed Across Cities
+SELECT city, AVG(windspeed) AS avg_windspeed
+FROM weather_data
+GROUP BY city;
+
+5) Temperature Trend Over Time
+SELECT date, city, temperature
+FROM weather_data
+ORDER BY date ASC;
+
