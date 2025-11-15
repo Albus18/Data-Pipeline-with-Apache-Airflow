@@ -15,7 +15,7 @@ Tableau_dashboard.png
 
 ---
 
-# ⭐ Project Overview  
+#  Project Overview  
 
 This project includes:  
 - ✔ Weather data extraction (Open-Meteo API)  
@@ -32,7 +32,7 @@ This is ideal for:
 
 ---
 
-# 🧱 Database Schema  
+# Database Schema  
 
 Weather data is stored using the following structure:
 
