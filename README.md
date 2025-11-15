@@ -25,3 +25,74 @@ Built an automated ETL pipeline to extract live weather data from APIs, transfor
 | 2025-11-22 | 28.7041  | 77.1025   | 19.2             | 8.7              | 355                | 0            |
 | 2025-11-23 | 28.7041  | 77.1025   | 19.0             | 8.3              | 5                  | 1            |
 | 2025-11-24 | 28.7041  | 77.1025   | 18.7             | 7.9              | 10                 | 0            |
+
+
+Data Cleaning
+
+Before loading the dataset into SQL or Tableau, the following cleaning steps were performed:
+
+1) Remove Missing Values
+
+Check for null values in key columns:
+
+SELECT *
+FROM weather_data
+WHERE temperature IS NULL
+   OR windspeed IS NULL
+   OR winddirection IS NULL
+   OR weathercode IS NULL;
+
+
+If any appear, drop or fill:
+
+DELETE FROM weather_data
+WHERE temperature IS NULL;
+
+2) Ensure Correct Data Types
+ALTER TABLE weather_data
+MODIFY latitude FLOAT,
+MODIFY longitude FLOAT,
+MODIFY temperature FLOAT,
+MODIFY windspeed FLOAT,
+MODIFY winddirection FLOAT,
+MODIFY weathercode INT;
+
+3) Remove Duplicate Records
+
+Weather data may repeat for the same timestamp:
+
+DELETE t1 FROM weather_data t1
+INNER JOIN weather_data t2
+WHERE 
+    t1.timestamp > t2.timestamp
+    AND t1.latitude = t2.latitude
+    AND t1.longitude = t2.longitude;
+
+
+
+Basic SQL Queries for Analysis
+1) Get Average Temperature by City
+SELECT city, AVG(temperature) AS avg_temperature
+FROM weather_data
+GROUP BY city;
+
+2) Maximum and Minimum Temperature
+SELECT 
+    MAX(temperature) AS max_temp,
+    MIN(temperature) AS min_temp
+FROM weather_data;
+
+3) Fetch Data for a Specific Date
+SELECT *
+FROM weather_data
+WHERE date = '2025-11-15';
+
+4) Compare Windspeed Between Cities
+SELECT city, AVG(windspeed) AS avg_windspeed
+FROM weather_data
+GROUP BY city;
+
+5) Trend Analysis – Temperature Over Time
+SELECT date, city, temperature
+FROM weather_data
+ORDER BY date ASC;
