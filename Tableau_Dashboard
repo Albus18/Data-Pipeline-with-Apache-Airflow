@@ -1,0 +1,48 @@
+# 🌦️ Live Weather Data — Mumbai & Delhi  
+A real-time weather data project comparing Mumbai and elhi using the Open-Meteo API.  
+This project collects temperature, windspeed, wind direction, and weather codes, and visualizes them using a Tableau-style dashboard.
+
+---
+
+## 📊 Weather Comparison Dashboard  
+Below is the visual dashboard created to compare both cities:
+
+![Weather Dashboard]
+Tableau_dashboard.png
+
+---
+
+##  Features
+- Live weather data fetching using **Open-Meteo API**
+- Comparison of **temperature, windspeed, and weather codes**
+- Clean dataset for **Tableau / Power BI / Excel**
+- Combined multi-city weather analysis
+- Dashboard visualization using:
+  - Line charts  
+  - KPI summary cards  
+  - Bar charts  
+  - Wind direction chart  
+  - Weather code heatmap  
+
+---
+
+## 📦 Tech Stack
+- ython 
+- Open-Meteo Weather API**  
+- Tableau  (for visualization)
+- GitHub (project hosting)
+
+---
+
+## 🗂️ Data Model (SQL Schema)
+
+```sql
+CREATE TABLE IF NOT EXISTS weather_data (
+    latitude FLOAT,
+    longitude FLOAT,
+    temperature FLOAT,
+    windspeed FLOAT,
+    winddirection FLOAT,
+    weathercode INT,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
